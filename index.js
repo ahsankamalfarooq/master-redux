@@ -1,5 +1,6 @@
 import { createStore, applyMiddleware} from "redux";
 import logger from "redux-logger";
+import axios from "axios";
 
 const inc = 'increment'
 const dec = 'decrement'
@@ -91,7 +92,8 @@ setInterval(() => {
 }, 3000)
 
  
-
+//it is till here now we r making apis which we are doing in other files so this
+// in this file this is basic till 50 min of video
 
 
 
