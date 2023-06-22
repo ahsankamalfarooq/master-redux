@@ -71,8 +71,8 @@ setTimeout(() => {
 }, 3000)
 
  
-
-
+//Now from onwards we are making multiple reducers so doing
+//it it in new file
 
 
 
