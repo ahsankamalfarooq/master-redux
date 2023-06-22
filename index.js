@@ -1,24 +1,45 @@
-import { createStore} from "redux";
+import { createStore, applyMiddleware} from "redux";
+import logger from "redux-logger";
 
+const inc = 'increment'
+const dec = 'decrement'
+const incByAmt = 'incrementByAmount'
 
 //store
 
-const store = createStore(reducer)
+const store = createStore(reducer, applyMiddleware(logger.default))
+const history = []
+
+//we can get error wrinting name of action so made it constant
+
 
 // function reducer = ()
 
 function reducer(state={amount :1 }, action) {
     // const amount = 1
-    if(action.type === 'increment') {
+    if(action.type === inc) {
 
         // immutability
-        state.amount = state.amount+1 
+        // state.amount = state.amount+1 
         //but above we change the previous state which is not suitable
+
+        //////////////////////
+        // so we did this to avoid immutability
 
 
         // return {amount : state.amount+1} here we create another obj of javascript whcih is not suitable
+          // return state
+    return {amount : state.amount+1}
     }
-    return state 
+
+
+    if(action.type === dec) {
+        return {amount : state.amount-1}
+    }
+    if(action.type === incByAmt) {
+        return {amount : state.amount + action.payload}
+    }
+    return state
 }
 
 //how to get state from the store
@@ -26,8 +47,6 @@ function reducer(state={amount :1 }, action) {
 // console.log(store.getState())
 
 
-
-// console.log(store.getState())
 // we dont need to console the state state every time we change 
 // the state instead we can use the store.subscribe method so when we will change the state
 // it will print the latest state
@@ -36,9 +55,12 @@ function reducer(state={amount :1 }, action) {
 //prev and updated state
 
 
+// store.subscribe(() => {
+//     history.pushState(store.getState())
+//     console.log(history)
+// })
 store.subscribe(() => {
-    history.pushState(store.getState())
-    console.log(history)
+    console.log(store.getState())
 })
 
 // {type : 'increment'}
@@ -49,11 +71,26 @@ store.subscribe(() => {
 // we can also send the dispatch or action after every specific
 // time using interval
 
+//Action Creator
+function increment() {
+    return {type : inc}
+}
+function decrement() {
+    return {type : dec}
+}
+function incrementByAmount(value) {
+    return {type : incByAmt, payload : value}
+}
+
 setInterval(() => {
-    store.dispatch({type:'increment'})
-}, 2000)
+    // store.dispatch({type:'increment'})
+    // store.dispatch({type:'decrement'})
+    // store.dispatch({type:'incrementByAmount', payload : 4})
+    store.dispatch(incrementByAmount(4))
 
+}, 3000)
 
+ 
 
 
 
