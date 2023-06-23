@@ -21,7 +21,9 @@ const store = createStore(combineReducers({
 function accountReducer(state={amount :1 }, action) {
 
     switch(action.type){
-        case init: return {amount : action.payload +1}
+        case getAccUserFulfilled: return {amount : action.payload +1, pending: false}
+        case getAccUserRejected: return {...state, error: action.error, pending: false}
+        case getAccUserPending: return {...state, pending: true}
         case dec: return {amount : action.payload -1}
         case incByAmt: return {amount :action.payload}
         default : return state
@@ -46,11 +48,21 @@ store.subscribe(() => {
 })
     function getUserAccount(id) {
         return async (dispatch, getState) =>{
-            const {data} = await axios.get(`http://localhost:3000/account/${id}`)
-            dispatch(initUser(data.amount))
+            try{
+                dispatch(getAccountUserPending())
+                const {data} = await axios.get(`http://localhost:3000/account/${id}`)
+                dispatch(getAccountUserFulfilled(data.amount))
+            } catch(error){
+                dispatch(getAccountUserRejected(error.message))
+            } 
+            
         }  }
-function initUser(value) {
-    return {type : init, payload: value} }
+function getAccountUserFulfilled(value) {
+    return {type : getAccUserFulfilled, payload: value} }
+function getAccountUserPending() {
+    return {type : getAccUserPending} }
+function getAccountUserRejected(error) {
+    return {type : getAccUserRejected, error: error} }
 function increment() {
     return {type : inc} }
 function decrement() {
