@@ -3,10 +3,13 @@ import logger from "redux-logger";
 import axios from "axios";
 import thunk from "redux-thunk";
 
-const init = 'account/init'
+// const init = 'account/init'
 const inc = 'account/increment'
 const dec = 'account/decrement'
 const incByAmt = 'account/incrementByAmount'
+const getAccUserPending = 'account/getUser/pending'
+const getAccUserFulfilled = 'account/getUser/fulfilled'
+const getAccUserRejected = 'account/getUser/rejected'
 const incBonus = 'bouns/increment'
 const store = createStore(combineReducers({
     account : accountReducer,
@@ -41,7 +44,7 @@ function accountReducer(state={amount :1 }, action) {
 store.subscribe(() => {
     console.log(store.getState())
 })
-    function getUser(id) {
+    function getUserAccount(id) {
         return async (dispatch, getState) =>{
             const {data} = await axios.get(`http://localhost:3000/account/${id}`)
             dispatch(initUser(data.amount))
@@ -57,8 +60,8 @@ function incrementByAmount(value) {
 function incrementBouns(value) {
     return {type : incBonus, payload : value}}
 
-    // store.dispatch(getUser(2))
-    store.dispatch(incrementBouns())
+    store.dispatch(getUserAccount(2))
+    // store.dispatch(get())
 
 
 
